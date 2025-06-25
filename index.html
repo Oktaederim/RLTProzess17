@@ -170,7 +170,7 @@
                     <div class="slider-group"><label>Volumenstrom: <span id="volumenstromLabel">5000</span> m³/h</label><input type="range" id="volumenstromSlider" min="2500" max="7500" step="50" value="5000"></div>
                      <div class="slider-group"><label>Zuluft-Temperatur: <span id="tempZuluftLabel">20,0</span> °C</label><input type="range" id="tempZuluftSlider" min="14" max="26" step="0.1" value="20.0"></div>
                      <div class="slider-group" id="rhZuluftSliderGroup"><label>Zuluft-Rel. Feuchte: <span id="rhZuluftLabel">50,0</span> %</label><input type="range" id="rhZuluftSlider" min="30" max="70" step="0.5" value="50.0"></div>
-                    <div id="reference-details" class="invisible"><hr><div class="cost-display change reference"><span class="cost-label">Referenzkosten:</span><span class="cost-value" id="kostenReferenz">--</span></div><div class="cost-display change"><span class="cost-label">Δ Kosten:</span><span class="cost-value" id="kostenAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Temperatur:</span><span class="cost-value" id="tempAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Feuchte:</span><span class="cost-value" id="rhAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Volumenstrom:</span><span class="cost-value" id="volumenAenderung">--</span></div></div>
+                    <div id="reference-details"><hr><div class="cost-display change reference"><span class="cost-label">Referenzkosten:</span><span class="cost-value" id="kostenReferenz">--</span></div><div class="cost-display change"><span class="cost-label">Δ Kosten:</span><span class="cost-value" id="kostenAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Temperatur:</span><span class="cost-value" id="tempAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Feuchte:</span><span class="cost-value" id="rhAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Volumenstrom:</span><span class="cost-value" id="volumenAenderung">--</span></div></div>
                 </div>
                 <div class="cost-output-section">
                     <h4>Leistung & Betriebskosten (€/h)</h4>
@@ -223,7 +223,7 @@
                 <ul>
                     <li><strong>Elektrische Ventilatorleistung (P_el):</strong><p>Formel: P_el [kW] = (SFP [W/(m³/h)] × Volumenstrom [m³/h]) / 1000</p></li>
                     <li><strong>Kosten pro Stunde (€/h):</strong><p>Formel: Kosten = Leistung [kW] × Energiepreis [€/kWh]</p></li>
-                    <li><strong>Kosten pro Jahr (€/a):</strong><p>Formel: Jahreskosten = Leistung [kW] × Betriebsstunden [h/a] × Energiepreis [€/kWh]</p></li>
+                    <li><strong>Kosten pro Jahr (€/a):</strong><p>Formel: Jahreskosten = Kosten pro Stunde [€/h] × Betriebsstunden [h/a]</p></li>
                 </ul>
             </div>
         </details>
