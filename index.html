@@ -58,15 +58,8 @@
                         <input type="number" id="tempZuluft" value="20.0" step="0.1" min="0" max="60">
                     </div>
                     <div class="input-group" id="sollFeuchteWrapper">
-                        <label>
-                            Feuchte-Sollwert
-                            <select id="feuchteSollTyp">
-                                <option value="rh" selected>Relative Feuchte (%)</option>
-                                <option value="x">Absolute Feuchte (g/kg)</option>
-                            </select>
-                        </label>
+                        <label for="rhZuluft">Relative Feuchte (%)</label>
                         <input type="number" id="rhZuluft" value="50.0" step="0.1" min="0" max="100">
-                        <input type="number" id="xZuluft" value="7.26" step="0.1" class="hidden">
                     </div>
                 </div>
 
@@ -230,7 +223,7 @@
                 <ul>
                     <li><strong>Elektrische Ventilatorleistung (P_el):</strong><p>Formel: P_el [kW] = (SFP [W/(m³/h)] × Volumenstrom [m³/h]) / 1000</p></li>
                     <li><strong>Kosten pro Stunde (€/h):</strong><p>Formel: Kosten = Leistung [kW] × Energiepreis [€/kWh]</p></li>
-                    <li><strong>Kosten pro Jahr (€/a):</strong><p>Formel: Jahreskosten = Kosten pro Stunde [€/h] × Betriebsstunden [h/a]</p></li>
+                    <li><strong>Kosten pro Jahr (€/a):</strong><p>Formel: Jahreskosten = Leistung [kW] × Betriebsstunden [h/a] × Energiepreis [€/kWh]</p></li>
                 </ul>
             </div>
         </details>
