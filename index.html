@@ -58,8 +58,15 @@
                         <input type="number" id="tempZuluft" value="20.0" step="0.1" min="0" max="60">
                     </div>
                     <div class="input-group" id="sollFeuchteWrapper">
-                        <label for="rhZuluft">Relative Feuchte (%)</label>
+                        <label>
+                            Feuchte-Sollwert
+                            <select id="feuchteSollTyp">
+                                <option value="rh" selected>Relative Feuchte (%)</option>
+                                <option value="x">Absolute Feuchte (g/kg)</option>
+                            </select>
+                        </label>
                         <input type="number" id="rhZuluft" value="50.0" step="0.1" min="0" max="100">
+                        <input type="number" id="xZuluft" value="7.26" step="0.1" class="hidden">
                     </div>
                 </div>
 
@@ -170,7 +177,7 @@
                     <div class="slider-group"><label>Volumenstrom: <span id="volumenstromLabel">5000</span> m³/h</label><input type="range" id="volumenstromSlider" min="2500" max="7500" step="50" value="5000"></div>
                      <div class="slider-group"><label>Zuluft-Temperatur: <span id="tempZuluftLabel">20,0</span> °C</label><input type="range" id="tempZuluftSlider" min="14" max="26" step="0.1" value="20.0"></div>
                      <div class="slider-group" id="rhZuluftSliderGroup"><label>Zuluft-Rel. Feuchte: <span id="rhZuluftLabel">50,0</span> %</label><input type="range" id="rhZuluftSlider" min="30" max="70" step="0.5" value="50.0"></div>
-                    <div id="reference-details"><hr><div class="cost-display change reference"><span class="cost-label">Referenzkosten:</span><span class="cost-value" id="kostenReferenz">--</span></div><div class="cost-display change"><span class="cost-label">Δ Kosten:</span><span class="cost-value" id="kostenAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Temperatur:</span><span class="cost-value" id="tempAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Feuchte:</span><span class="cost-value" id="rhAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Volumenstrom:</span><span class="cost-value" id="volumenAenderung">--</span></div></div>
+                    <div id="reference-details" class="invisible"><hr><div class="cost-display change reference"><span class="cost-label">Referenzkosten:</span><span class="cost-value" id="kostenReferenz">--</span></div><div class="cost-display change"><span class="cost-label">Δ Kosten:</span><span class="cost-value" id="kostenAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Temperatur:</span><span class="cost-value" id="tempAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Feuchte:</span><span class="cost-value" id="rhAenderung">--</span></div><div class="cost-display change parameter"><span class="cost-label">Δ Volumenstrom:</span><span class="cost-value" id="volumenAenderung">--</span></div></div>
                 </div>
                 <div class="cost-output-section">
                     <h4>Leistung & Betriebskosten (€/h)</h4>
