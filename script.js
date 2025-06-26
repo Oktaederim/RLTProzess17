@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const dom = {
         tempAussen: document.getElementById('tempAussen'), rhAussen: document.getElementById('rhAussen'),
         tempZuluft: document.getElementById('tempZuluft'), rhZuluft: document.getElementById('rhZuluft'),
+        volumenstrom: document.getElementById('volumenstrom'),
         kuehlerAktiv: document.getElementById('kuehlerAktiv'),
         druck: document.getElementById('druck'),
         resetBtn: document.getElementById('resetBtn'), preisWaerme: document.getElementById('preisWaerme'),
         preisStrom: document.getElementById('preisStrom'),
-        volumenstrom: document.getElementById('volumenstrom'),
         volumenstromSlider: document.getElementById('volumenstromSlider'), tempZuluftSlider: document.getElementById('tempZuluftSlider'),
         rhZuluftSlider: document.getElementById('rhZuluftSlider'), volumenstromLabel: document.getElementById('volumenstromLabel'),
         tempZuluftLabel: document.getElementById('tempZuluftLabel'), rhZuluftLabel: document.getElementById('rhZuluftLabel'),
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         compVE: { node: document.getElementById('comp-ve'), p: document.getElementById('res-p-ve'), wv: document.getElementById('res-wv-ve') },
         compK: { node: document.getElementById('comp-k'), p: document.getElementById('res-p-k'), kondensat: document.getElementById('res-kondensat'), wv: document.getElementById('res-wv-k') },
         compNE: { node: document.getElementById('comp-ne'), p: document.getElementById('res-p-ne'), wv: document.getElementById('res-wv-ne') },
+        summaryContainer: document.getElementById('summary-container'),
         referenceDetails: document.getElementById('reference-details'),
         kostenReferenz: document.getElementById('kostenReferenz'),
         kostenAenderung: document.getElementById('kostenAenderung'), tempAenderung: document.getElementById('tempAenderung'),
@@ -375,23 +376,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
     function addEventListeners() {
-        dom.resetBtn.addEventListener('click', resetToDefaults);
-        dom.resetSlidersBtn.addEventListener('click', resetSlidersToRef);
-        dom.setReferenceBtn.addEventListener('click', handleSetReference);
+        // --- Buttons ---
+        if (dom.resetBtn) dom.resetBtn.addEventListener('click', resetToDefaults);
+        if (dom.resetSlidersBtn) dom.resetSlidersBtn.addEventListener('click', resetSlidersToRef);
+        if (dom.setReferenceBtn) dom.setReferenceBtn.addEventListener('click', handleSetReference);
 
-        const allInputs = document.querySelectorAll('input, select');
+        // --- All other inputs and selects ---
+        const allInputs = document.querySelectorAll('input:not([type=button]), select');
         allInputs.forEach(el => {
-            if (el.tagName === 'BUTTON') return;
-
             const eventType = (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'input';
-            
             el.addEventListener(eventType, (e) => {
                 const target = e.target;
-                if (target.type === 'number') {
-                    enforceLimits(target);
-                }
+                if (target.type === 'number') enforceLimits(target);
                 
                 if (target.type === 'range') {
                     const inputId = target.id.replace('Slider', '');
@@ -407,10 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateBetriebszeit(target.id);
                 }
                 
-                if (['kuehlerAktiv', 'feuchteSollTyp'].includes(target.id) || target.name === 'kuehlmodus') {
+                if (target.id === 'kuehlerAktiv' || target.name === 'kuehlmodus' || target.id === 'feuchteSollTyp') {
                     handleKuehlerToggle();
                 }
-
                 calculateAll();
             });
         });
