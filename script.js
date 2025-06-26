@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const dom = {
         tempAussen: document.getElementById('tempAussen'), rhAussen: document.getElementById('rhAussen'),
         tempZuluft: document.getElementById('tempZuluft'), rhZuluft: document.getElementById('rhZuluft'),
-        xZuluft: document.getElementById('xZuluft'), volumenstrom: document.getElementById('volumenstrom'),
         kuehlerAktiv: document.getElementById('kuehlerAktiv'),
-        druck: document.getElementById('druck'), feuchteSollTyp: document.getElementById('feuchteSollTyp'),
+        druck: document.getElementById('druck'),
         resetBtn: document.getElementById('resetBtn'), preisWaerme: document.getElementById('preisWaerme'),
         preisStrom: document.getElementById('preisStrom'),
+        volumenstrom: document.getElementById('volumenstrom'),
         volumenstromSlider: document.getElementById('volumenstromSlider'), tempZuluftSlider: document.getElementById('tempZuluftSlider'),
         rhZuluftSlider: document.getElementById('rhZuluftSlider'), volumenstromLabel: document.getElementById('volumenstromLabel'),
         tempZuluftLabel: document.getElementById('tempZuluftLabel'), rhZuluftLabel: document.getElementById('rhZuluftLabel'),
@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         compVE: { node: document.getElementById('comp-ve'), p: document.getElementById('res-p-ve'), wv: document.getElementById('res-wv-ve') },
         compK: { node: document.getElementById('comp-k'), p: document.getElementById('res-p-k'), kondensat: document.getElementById('res-kondensat'), wv: document.getElementById('res-wv-k') },
         compNE: { node: document.getElementById('comp-ne'), p: document.getElementById('res-p-ne'), wv: document.getElementById('res-wv-ne') },
-        summaryContainer: document.getElementById('summary-container'),
         referenceDetails: document.getElementById('reference-details'),
         kostenReferenz: document.getElementById('kostenReferenz'),
         kostenAenderung: document.getElementById('kostenAenderung'), tempAenderung: document.getElementById('tempAenderung'),
@@ -64,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getH(T, x_g_kg) { if (!isFinite(x_g_kg)) return Infinity; const x_kg_kg = x_g_kg / 1000.0; return 1.006 * T + x_kg_kg * (2501 + 1.86 * T); }
 
     function enforceLimits(el) {
-        if (el.type !== 'number' || !el.hasAttribute('min')) return;
+        if (!el || el.type !== 'number' || !el.hasAttribute('min')) return;
         const value = parseFloat(el.value);
         const min = parseFloat(el.min);
         const max = parseFloat(el.max);
@@ -80,9 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputs = {
                 tempAussen: parseFloat(dom.tempAussen.value) || 0, rhAussen: parseFloat(dom.rhAussen.value) || 0,
                 tempZuluft: parseFloat(dom.tempZuluft.value) || 0, rhZuluft: parseFloat(dom.rhZuluft.value) || 0,
-                xZuluft: parseFloat(dom.xZuluft.value) || 0, volumenstrom: parseFloat(dom.volumenstrom.value) || 0,
+                volumenstrom: parseFloat(dom.volumenstrom.value) || 0,
                 kuehlerAktiv: dom.kuehlerAktiv.checked, tempVorerhitzerSoll: 5.0,
-                druck: (parseFloat(dom.druck.value) || 1013.25) * 100, feuchteSollTyp: dom.feuchteSollTyp.value,
+                druck: (parseFloat(dom.druck.value) || 1013.25) * 100,
                 preisWaerme: parseFloat(dom.preisWaerme.value) || 0, preisStrom: parseFloat(dom.preisStrom.value) || 0,
                 kuehlmodus: checkedKuehlmodus ? checkedKuehlmodus.value : 'dehumidify',
                 tempHeizVorlauf: parseFloat(dom.tempHeizVorlauf.value) || 0, tempHeizRuecklauf: parseFloat(dom.tempHeizRuecklauf.value) || 0,
@@ -102,13 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const massenstrom_kg_s = (inputs.volumenstrom / 3600) * 1.2;
             const zuluftSoll = { t: inputs.tempZuluft };
             if (inputs.kuehlerAktiv && inputs.kuehlmodus === 'dehumidify') {
-                zuluftSoll.rh = inputs.rhZuluft;
-                zuluftSoll.x = getX(zuluftSoll.t, zuluftSoll.rh, inputs.druck);
-                const zielTaupunkt = getTd(zuluftSoll.x, inputs.druck);
-                if (zielTaupunkt < MIN_DEW_POINT) {
-                    dom.processOverviewContainer.innerHTML = `<div class="process-overview process-error">Warnung: Feuchte-Sollwert erfordert Abkühlung unter ${MIN_DEW_POINT}°C.</div>`;
-                    return;
-                }
+                 zuluftSoll.rh = inputs.rhZuluft;
+                 zuluftSoll.x = getX(zuluftSoll.t, zuluftSoll.rh, inputs.druck); 
+                 const zielTaupunkt = getTd(zuluftSoll.x, inputs.druck);
+                 if (zielTaupunkt < MIN_DEW_POINT) {
+                     dom.processOverviewContainer.innerHTML = `<div class="process-overview process-error">Warnung: Feuchte-Sollwert erfordert Abkühlung unter ${MIN_DEW_POINT}°C.</div>`;
+                     return;
+                 }
             } else {
                 zuluftSoll.x = aussen.x;
                 zuluftSoll.rh = getRh(zuluftSoll.t, zuluftSoll.x, inputs.druck);
@@ -376,16 +375,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // --- INITIALIZATION ---
+    
     function addEventListeners() {
         dom.resetBtn.addEventListener('click', resetToDefaults);
         dom.resetSlidersBtn.addEventListener('click', resetSlidersToRef);
         dom.setReferenceBtn.addEventListener('click', handleSetReference);
-        
-        const allInputs = document.querySelectorAll('input:not([type=button]), select');
+
+        const allInputs = document.querySelectorAll('input, select');
         allInputs.forEach(el => {
+            if (el.tagName === 'BUTTON') return;
+
             const eventType = (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'input';
+            
             el.addEventListener(eventType, (e) => {
                 const target = e.target;
                 if (target.type === 'number') {
